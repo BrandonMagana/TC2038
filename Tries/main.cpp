@@ -7,7 +7,7 @@ using namespace std;
 
 struct TrieNode{
     struct TrieNode *children[alphabet] = {NULL};
-    char value = ' ';
+    char value = '@';
     bool isWord = false;
 };
 
@@ -50,10 +50,10 @@ void trieDFS(struct TrieNode *root){
     if(!root)
         return;
     
+    cout << root->value << endl;
     for(int i = 0; i < alphabet; i++)
         trieDFS(root->children[i]);
     
-    cout << root->value << endl;
 }
 
 
@@ -79,14 +79,16 @@ int main(){
 
     for (int i = 0; i < lookUpWords; i++){
         cin >> key;
+         transform(key.begin(), key.end(), key.begin(), ::tolower);
         searches[i] = key;
     }
 
+    cout<<"Resultado de busqueda:"<<endl;
     for (int i = 0; i < lookUpWords; i++){
         if( isInTrie(root, searches[i]) )
-            cout<<"True"<<endl;
+            cout<<searches[i]<<" True"<<endl;
         else
-            cout<<"False"<<endl;
+             cout<<searches[i]<<" False"<<endl;
     }
 
     return 0;

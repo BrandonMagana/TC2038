@@ -1,0 +1,8 @@
+4
+mouse
+laptop
+color
+gis
+2
+color
+escritorio
