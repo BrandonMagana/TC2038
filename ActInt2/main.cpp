@@ -7,7 +7,7 @@
 
 using namespace std;
 
-vector<vector<int>> getMatrix(int n){
+vector<vector<int>> getAdjacencyMatrix(int n){
     vector<vector<int>> matrix;
 
     for (int i = 0; i < n; i++){
@@ -22,38 +22,56 @@ vector<vector<int>> getMatrix(int n){
     return matrix;
 }
 
+vector<int> stringToCoordinates(string numsString) {
+    string formatedString = numsString.substr(1, numsString.size() -2);
+    string coordinate;
+    stringstream ss(formatedString);
+    vector<int> coordinates;
+
+    while(getline(ss, coordinate, ',')){
+        coordinates.push_back(stoi(coordinate));
+    }
+    
+    return coordinates;
+}
+
+vector<Point> getPointVectorFromInput(int nPoints){
+    vector<Point> points;
+    for (int i = 0; i < nPoints; i++) {
+        string numsS;
+        getline(cin >> std::ws, numsS);
+        vector<int> coordinates = stringToCoordinates(numsS);
+
+        points.push_back({coordinates[0], coordinates[1]});
+    }
+    return points;
+} 
+
+void optimalWireUp(Graph city, int startingNode){
+    city.dijkstra(startingNode);
+}
 
 int main(){
     int n;
     cin >> n;
 
-    cout<<"\n";
-    vector<vector<int>> graph = getMatrix(n);
+    // 1. Shortest Path 
+    vector<vector<int>> graph = getAdjacencyMatrix(n);
     Graph routeGraph(graph);
-    routeGraph.dijkstra(0);
+    optimalWireUp(routeGraph, 0);
+
+    // 2. Travelling Salesman
+    routeGraph.travellingSalesman(0);
 
     //3. MaximunFLow
-    vector<vector<int>> flowMatrix = getMatrix(n);
+    vector<vector<int>> flowMatrix = getAdjacencyMatrix(n);
     Graph flowGraph(flowMatrix);
     cout << flowGraph.maximunFlow(0, n-1)<<endl;
     
-
-    /*
     //4. Poligonos convexos
-    vector<Point> points;
-    vector<int> aux;
-    for (int i = 0; i < n; i++) {
-        string numsS;
-        getline(cin >> std::ws, numsS);
-        
-        vector<int> aux = createNumsVector(numsS);
-
-        points.push_back({aux[0], aux[1]});
-        aux.clear();
-    }
-
+    vector<Point> points = getPointVectorFromInput(n);
     grahamScan(points, n);
-    */
+
     return 0;
 }
 

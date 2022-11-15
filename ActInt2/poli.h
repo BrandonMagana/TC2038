@@ -59,6 +59,7 @@ int compare(const void *vp1, const void *vp2) {
 //O(n log n): siendo n los puntos ingresados 
 void grahamScan(vector<Point> points, int n) {
   int ymin = points[0].y, min = 0;
+
   for (int i = 1; i < n; i++) {
     int y = points[i].y;
 
@@ -81,9 +82,10 @@ void grahamScan(vector<Point> points, int n) {
     m++;
   }
 
-  if (m < 3)
+  if (m < 3){
+    cout<<"Need more than 2 points to build up a convex hull. Please try again!"<<endl;
     return;
-
+  }
   stack<Point> poliStack;
   poliStack.push(points[0]);
   poliStack.push(points[1]);
@@ -105,20 +107,9 @@ void grahamScan(vector<Point> points, int n) {
   }
 
   for (int i = 0; i < convexPoli.size(); i++) {
-    cout << convexPoli[i] << endl;
+    if(i == convexPoli.size() - 1)
+      cout<<convexPoli[i]<<endl;
+    else
+      cout << convexPoli[i] << " -> ";
   }
-}
-
-vector<int> createNumsVector(string numsString) {
-  numsString = numsString.substr(1, numsString.size() -2);
-  
-  stringstream ss(numsString);
-  vector<int> nums;
-
-  for (int i; ss >> i;) {
-    nums.push_back(i);
-    if (ss.peek() == ',')
-      ss.ignore();
-  }
-  return nums;
 }
