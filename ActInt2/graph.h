@@ -24,16 +24,25 @@ class Graph{
             }
         };
         
+        void printPath(int index, vector<int> parents){
+
+            if(index == -1){
+                return;
+            }
+            printPath(parents[index], parents);
+            cout << index << " ";
+        }
+        
         // imprime la solución del algoritmo de Dijkstra
         // Comlejidad temporal: O(V)
-        void printSolution(vector<int> results, int root){
-            for (int i = 0; i < this->vertices; i++){
-                cout << "node "<< root <<" to node "<<i<<": ";
-                if(results[i] == INF){
-                    cout<<"INF"<< endl;
-                }else{
-                    cout<<results[i]<< endl;
-                }
+        void printSolution(vector<int> results, vector<int> parents, int root, int dest){
+            cout << "node " << root << " to node " << dest <<": ";
+            if(results[dest] == INF){
+                cout<<"INF"<< endl;
+            }else{
+                cout<<results[dest] << ", path: ";
+                printPath(dest, parents);
+                cout << endl;
             }
         }
 
@@ -74,28 +83,32 @@ class Graph{
         // Función que calcula la ruta más corta entre el nodo raiz y los demás nodos
         // Complejidad temporal: O(E log V) E siendo las aristas y V los vertices
         // Complejidad espacial: O(V)
-        void dijkstra(int root){
+        void dijkstra(int root, int dest){
             vector<int> results(this->adjMatrix.size(),INF);
             vector<bool> visited(this->adjMatrix.size(),false);
             results[root] = 0;
             priority_queue<pd,vector<pd>,myComp> pq;
             
             pq.push(make_pair(root,0));
+            vector<int> parents(this->vertices);
+
+            parents[root] = -1;
 
             while(pq.size() != 0){
                 
                 int index = pq.top().first;
-                int minVal = pq.top().second;
+                //int minVal = pq.top().second;
                 pq.pop();
                 visited[index] = true;
 
                 for(int i = 0; i < this->vertices; i++){
-                    if(this->adjMatrix[index][i] != -1){
+                    if(this->adjMatrix[index][i] != 0){
                         if(visited[i] == false && this->adjMatrix[index][i] != INF){
                             int newDist = results[index] + this->adjMatrix[index][i]; 
 
                             if(newDist < results[i]){
                                 results[i] = newDist;
+                                parents[i] = index;
                                 pq.push(make_pair(i,newDist));
                             } 
                         }
@@ -103,7 +116,7 @@ class Graph{
                 }
             }
 
-            printSolution(results,root);
+            printSolution(results, parents, root, dest);
 
         }
 
